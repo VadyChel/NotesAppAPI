@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const NotesSchema = new mongoose.Schema({
-  pageId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Page' },
+  page: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Page' },
   content: { type: String, required: true },
   styles: { type: Object, default: {} },
   position: {
@@ -12,7 +12,7 @@ const NotesSchema = new mongoose.Schema({
 }, { collection: 'notes' })
 
 function autoPopulate (next) {
-  this.populate('pageId')
+  this.populate('page')
   next()
 }
 

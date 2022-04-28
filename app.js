@@ -1,9 +1,9 @@
 import path from 'path'
 import AutoLoad from 'fastify-autoload'
 import { fileURLToPath } from 'url'
-import fastifyFormBody from 'fastify-formbody'
+import fastifyFormBody from '@fastify/formbody'
 import fastifyMongooseAPI from 'fastify-mongoose-api'
-import fastifyCORS from 'fastify-cors'
+import fastifyCORS  from '@fastify/cors'
 import mongoose from "mongoose"
 import Page from "./models/pages.js"
 import Note from "./models/notes.js"
@@ -20,11 +20,7 @@ export default async (fastify, opts) => {
     dir: path.join(__dirname, 'routes'),
     options: Object.assign({}, opts)
   })
-  fastify.register(fastifyCORS, {
-    origin: ['localhost'],
-    methods: ['PUT', 'POST', 'GET', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  })
+  fastify.register(fastifyCORS)
   fastify.register(fastifyFormBody)
   fastify.register(fastifyMongooseAPI, {
     models: mongoose.models,
