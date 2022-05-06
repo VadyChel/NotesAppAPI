@@ -4,10 +4,7 @@ const NotesSchema = new mongoose.Schema({
   page: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Page' },
   content: { type: String, required: true },
   styles: { type: Object, default: {someK: 'someV'} },
-  position: {
-    type: Number,
-    required: true
-  },
+  position: { type: Number, required: true },
   author: { type: String, required: true }
 }, { collection: 'notes' })
 

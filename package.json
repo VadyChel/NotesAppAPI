@@ -10,7 +10,7 @@
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
     "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P -p 5000 app.js"
+    "dev": "nodemon 5000 app.js"
   },
   "repository": {
     "type": "git",
@@ -24,15 +24,17 @@
   },
   "homepage": "https://github.com/VadyChel/NotesAppAPI#readme",
   "dependencies": {
+    "@fastify/ajv-compiler": "^3.1.0",
     "@fastify/cors": "^7.0.0",
     "@fastify/formbody": "^6.0.0",
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.10.0",
-    "fastify-cli": "^2.15.0",
     "fastify-mongoose-api": "^1.2.11",
     "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.2",
-    "mongoose": "^6.3.1"
+    "mongoose": "^6.3.1",
+    "nodemon": "^2.0.16",
+    "pino-pretty": "^7.6.1"
   },
   "devDependencies": {
     "tap": "^15.1.6"
