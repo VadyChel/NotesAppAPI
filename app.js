@@ -9,6 +9,7 @@ import ajvCompiler from '@fastify/ajv-compiler'
 import fastify from "fastify"
 import Page from "./models/pages.js"
 import Note from "./models/notes.js"
+import {API_PORT} from "./config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,7 +55,7 @@ app.register(fastifyMongooseAPI, {
 })
 
 try {
-  await app.listen(5000)
+  await app.listen(API_PORT)
 } catch (e) {
   console.log(e)
   process.exit()
