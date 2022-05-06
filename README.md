@@ -1,23 +1,41 @@
-# Getting Started with Fastify-CLI [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
-This project was bootstrapped with Fastify-CLI.
+# NotesAPP API
 
-## Available Scripts
+## Installation
+1. Firstly, clone the repository
+```
+git clone https://github.com/VadyChel/NotesAppAPI.git
+```
 
-In the project directory, you can run:
+...and change directory to cloned
+```
+cd NotesAppAPI
+```
 
-### `npm run dev`
+2. Install dependencies
+```
+npm i
+```
 
-To start the app in dev mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+...or if you want dev dependencies
+```
+npm i -D
+```
 
-### `npm start`
+3. Run server
+```
+npm run start
+```
 
-For production mode
+...or in dev mode
+```
+npm run dev
+```
 
-### `npm run test`
+**For test executing**
+```
+npm run test
+```
 
-Run the test cases.
-
-## Learn More
-
-To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+## Application settings
+1. Create file `config.js` and move to them `config.template.js` content
+2. Put your data into `config.js` variables
