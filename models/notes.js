@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 const NotesSchema = new mongoose.Schema({
+  noteId: { type: String, required: true },
   page: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Page' },
   content: { type: String, required: true },
   styles: { type: Object, default: {someK: 'someV'} },

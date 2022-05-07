@@ -8,14 +8,14 @@ export default async (fastify, opts) => {
   })
 
   fastify.post('/remove', { schema: RemoveRouteSchema }, async (request, reply) => {
-    await Note.deleteMany({ _id: request.body.notesToRemove })
+    await Note.deleteMany({ noteId: request.body.notesToRemove })
     return { removedNotes: request.body.notesToRemove.length }
   })
 
   fastify.post('/update', { schema: UpdateRouteSchema }, async (request, reply) => {
     const operations = request.body.changedNotes.map((note) => ({
       updateOne: {
-        filter: { _id: note._id },
+        filter: { noteId: note.noteId },
         update: { $set: note }
       }
     }))
