@@ -3,35 +3,28 @@ import AutoLoad from 'fastify-autoload'
 import { fileURLToPath } from 'url'
 import fastifyFormBody from '@fastify/formbody'
 import fastifyMongooseAPI from 'fastify-mongoose-api'
-import fastifyCORS  from '@fastify/cors'
-import mongoose from "mongoose"
+import fastifyCORS from '@fastify/cors'
+import mongoose from 'mongoose'
 import ajvCompiler from '@fastify/ajv-compiler'
-import fastify from "fastify"
-import Page from "./models/pages.js"
-import Note from "./models/notes.js"
-import {API_PORT} from "./config.js";
+import Fastify from 'fastify'
+import { API_PORT } from './config.js'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const validationFactory = ajvCompiler()
-const app = fastify({
+const app = Fastify({
   logger: {
     prettyPrint: {
-      translateTime: true,
-      colorize: true
-    },
-    serializers: {
+      translateTime: true, colorize: true
+    }, serializers: {
       req: (request) => ({
-        method: request.method,
-        url: request.url
-      }),
-      res: (response) => ({
+        method: request.method, url: request.url
+      }), res: (response) => ({
         statusCode: response.statusCode
       })
     }
-  },
-  schemaController: {
+  }, schemaController: {
     compilesFactory: {
       buildValidator: validationFactory
     }
@@ -39,11 +32,10 @@ const app = fastify({
 })
 
 app.register(AutoLoad, {
-  dir: path.join(__dirname, 'plugins'),
+  dir: path.join(__dirname, 'plugins')
 })
 app.register(AutoLoad, {
-  dir: path.join(__dirname, 'routes'),
-  ignorePattern: /.+\.schemas\.js/
+  dir: path.join(__dirname, 'routes'), ignorePattern: /.+\.schemas\.js/
 })
 app.register(fastifyCORS)
 app.register(fastifyFormBody)
@@ -56,7 +48,7 @@ app.register(fastifyMongooseAPI, {
 
 try {
   await app.listen(API_PORT)
-} catch (e) {
+} catch(e) {
   console.log(e)
   process.exit()
 }
