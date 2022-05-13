@@ -35,7 +35,7 @@ app.register(AutoLoad, {
   dir: path.join(__dirname, 'plugins')
 })
 app.register(AutoLoad, {
-  dir: path.join(__dirname, 'routes'), ignorePattern: /.+\.schemas\.js/
+  dir: path.join(__dirname, 'routes')
 })
 app.register(fastifyCORS)
 app.register(fastifyFormBody)

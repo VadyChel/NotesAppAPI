@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../config.js'
+import { JWT_SECRET } from '../../config.js'
 
 const TokensSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
