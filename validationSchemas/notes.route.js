@@ -1,29 +1,31 @@
-export const NewRouteSchema = {
+export const NewNotesRouteSchema = {
   body: {
-    type: 'object',
-    properties: {
+    type: 'object', properties: {
       notesToAdd: { type: 'array', items: { $ref: 'http://vschemas/note.json#' } }
-    },
-    required: ['notesToAdd']
+    }, required: ['notesToAdd']
   }
 }
 
-export const RemoveRouteSchema = {
+export const RemoveNotesRouteSchema = {
   body: {
-    type: 'object',
-    properties: {
+    type: 'object', properties: {
       notesToRemove: { type: 'array', items: { type: 'string' } }
-    },
-    required: ['notesToRemove']
+    }, required: ['notesToRemove']
   }
 }
 
-export const UpdateRouteSchema = {
+export const UpdateNotesRouteSchema = {
   body: {
-    type: 'object',
-    properties: {
+    type: 'object', properties: {
       changedNotes: { type: 'array', items: { $ref: 'http://vschemas/note.json#' } }
-    },
-    required: ['changedNotes']
+    }, required: ['changedNotes']
+  }
+}
+
+export const GetNotesRouteSchema = {
+  params: {
+    type: 'object', properties: {
+      pageId: { type: 'string' }
+    }, required: ['pageId']
   }
 }
