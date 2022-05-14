@@ -15,12 +15,23 @@ async function refreshAccessToken(refreshToken) {
     throw Error('Not found token')
   }
 
+  // Check if refresh token is valid
+  const decodedRefreshToken = jwt.decode(foundToken.refreshToken, JWT_SECRET)
+  if(!decodedRefreshToken) throw new Error('Invalid refresh token')
+
+  // Check if refresh token also expired
+  if(decodedRefreshToken.expiresIn < new Date().getTime()) {
+    await Token.deleteOne({ refreshToken })
+    return await Token.create({ userId: foundToken.userId })
+  }
+
+  // Update current document with new access token
   const newAccessToken = jwt.sign({
     userId: foundToken.userId
   }, JWT_SECRET, { expiresIn: '5d' })
-  await Token.updateOne({ refreshToken }, {
+  console.log(await Token.updateOne({ refreshToken }, {
     accessToken: newAccessToken, expiresIn: new Date().getTime() + (3600 * 24 * 5)
-  })
+  }))
   return await Token.findOne({ accessToken: newAccessToken })
 }
 

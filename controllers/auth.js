@@ -5,20 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 import User from '../database/models/users.js'
 
 class AuthController {
-  checkAuthorizationHeaders(req, rep, done) {
-    if(!req.headers.authorization) {
-      throw new Error('No authorization headers')
-    }
-
-    const authorization = req.headers.authorization.split(' ').slice(1)
-    if(!authorization) {
-      throw new Error('No authorization headers')
-    }
-
-    req.authorization = authorization
-    done()
-  }
-
   async register(req, rep) {
     const { username, password, email } = req.body
     const foundAuthWithSpecifiedEmail = await Auth.findOne({ email })
@@ -43,7 +29,13 @@ class AuthController {
     }
 
     const foundToken = await Token.findOne({ userId: foundAuth.userId })
-    if(!foundToken) return await Token.create({ userId: foundAuth.userId })
+    if(!foundToken) {
+      return await Token.create({ userId: foundAuth.userId })
+    }
+
+    if(foundToken.expiresIn < new Date().getTime()) {
+      return await Token.refreshAccessToken(foundToken.refreshToken)
+    }
 
     return foundToken
   }
