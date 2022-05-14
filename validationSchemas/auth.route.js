@@ -1,7 +1,7 @@
 export const RegisterRouteSchema = {
   body: {
     type: 'object', properties: {
-      username: { type: 'string' }, email: { type: 'string' }, password: { type: 'string' }
+      username: { type: 'string', minLength: 4 }, email: { type: 'email' }, password: { type: 'string', minLength: 10 }
     }, required: ['username', 'email', 'password']
   }
 }
