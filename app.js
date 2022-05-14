@@ -2,9 +2,7 @@ import path from 'path'
 import AutoLoad from 'fastify-autoload'
 import { fileURLToPath } from 'url'
 import fastifyFormBody from '@fastify/formbody'
-import fastifyMongooseAPI from 'fastify-mongoose-api'
 import fastifyCORS from '@fastify/cors'
-import mongoose from 'mongoose'
 import ajvCompiler from '@fastify/ajv-compiler'
 import Fastify from 'fastify'
 import { API_PORT } from './config.js'
@@ -39,12 +37,6 @@ app.register(AutoLoad, {
 })
 app.register(fastifyCORS)
 app.register(fastifyFormBody)
-app.register(fastifyMongooseAPI, {
-  models: mongoose.models,
-  prefix: '/api/',
-  setDefaults: true,
-  methods: ['list', 'get', 'post', 'patch', 'put', 'delete']
-})
 
 try {
   await app.listen(API_PORT)
