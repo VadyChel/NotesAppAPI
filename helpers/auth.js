@@ -1,23 +1,22 @@
-import jwt from 'jsonwebtoken'
-import { JWT_SECRET } from '../config.js'
 import User from '../database/models/users.js'
+import TokenService from '../services/tokens.js'
 
 export async function checkAuthorizationHeaders(req, rep) {
   if(!req.headers.authorization) {
     throw new Error('No authorization headers')
   }
 
-  const authorization = req.headers.authorization.split(' ').slice(1)
-  if(!authorization) {
+  const accessToken = req.headers.authorization.split(' ')[1]
+  if(!accessToken) {
     throw new Error('No authorization headers')
   }
 
-  jwt.verify(authorization[0], JWT_SECRET)
-  const { userId } = jwt.decode(authorization[0], JWT_SECRET)
+  const userData = TokenService.validateAccessToken(accessToken)
+  if(!userData) throw new Error('Unauthorized')
 
-  const foundUserWithAuthorization = await User.findOne({ userId })
+  const foundUserWithAuthorization = await User.findOne({ userId: userData.userId })
   if(!foundUserWithAuthorization) throw new Error('Unknown user')
 
-  req.authorization = authorization
+  req.accessToken = accessToken
   req.currentUser = foundUserWithAuthorization
 }

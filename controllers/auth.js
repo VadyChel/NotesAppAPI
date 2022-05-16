@@ -1,57 +1,34 @@
-import Token from '../database/models/tokens.js'
-import Auth from '../database/models/auth.js'
-import bcrypt from 'bcrypt'
-import { v4 as uuidv4 } from 'uuid'
-import User from '../database/models/users.js'
+import AuthService from '../services/auth.js'
 
 class AuthController {
   async register(req, rep) {
     const { username, password, email } = req.body
-    const foundAuthWithSpecifiedEmail = await Auth.findOne({ email })
-    if(foundAuthWithSpecifiedEmail) throw new Error('Specified email already used')
-
-    const userId = uuidv4()
-    await Auth.create({
-      userId, username, passwordHash: await bcrypt.hash(password, 8), email
-    })
-    await User.create({ userId, username, email })
-    return await Token.create({ userId })
+    const userData = await AuthService.register(password, email, username)
+    return rep.setCookie('refreshToken', userData.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true
+    }).send(userData)
   }
 
   async login(req, rep) {
     const { password, email } = req.body
-    const foundAuth = await Auth.findOne({ email })
-    if(!foundAuth) throw new Error('You don\'t registered')
-
-    const isMatch = await bcrypt.compare(password, foundAuth.passwordHash)
-    if(!isMatch) {
-      throw new Error('Wrong password')
-    }
-
-    const foundToken = await Token.findOne({ userId: foundAuth.userId })
-    if(!foundToken) {
-      return await Token.create({ userId: foundAuth.userId })
-    }
-
-    if(foundToken.expiresIn < new Date().getTime()) {
-      return await Token.refreshAccessToken(foundToken.refreshToken)
-    }
-
-    return foundToken
+    const userData = await AuthService.login(password, email)
+    return rep.setCookie('refreshToken', userData.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true
+    }).send(userData)
   }
 
   async refreshToken(req, rep) {
-    return await Token.refreshAccessToken(req.authorization[0])
+    const refreshToken = req.cookies.refreshToken
+    const userData = await AuthService.refresh(refreshToken)
+    return rep.setCookie('refreshToken', userData.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true
+    }).send(userData)
   }
 
   async revokeToken(req, rep) {
-    const [accessToken, userId] = req.authorization
-    if(!userId) {
-      throw new Error('User id doesn\'t specified')
-    }
-
-    await Token.deleteOne({ accessToken: accessToken.trim(), userId: userId.trim() })
-    return { success: true }
+    const refreshToken = req.cookies.refreshToken
+    const userData = await AuthService.revoke(refreshToken)
+    return rep.clearCookie('refreshToken').send(userData)
   }
 }
 

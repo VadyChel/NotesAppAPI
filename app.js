@@ -6,6 +6,7 @@ import fastifyCORS from '@fastify/cors'
 import ajvCompiler from '@fastify/ajv-compiler'
 import Fastify from 'fastify'
 import { API_PORT } from './config.js'
+import fastifyCookie from '@fastify/cookie'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -35,6 +36,7 @@ app.register(AutoLoad, {
 app.register(AutoLoad, {
   dir: path.join(__dirname, 'routes')
 })
+app.register(fastifyCookie)
 app.register(fastifyCORS)
 app.register(fastifyFormBody)
 
