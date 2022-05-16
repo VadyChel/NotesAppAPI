@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt'
 import MailService from '../services/mails.js'
 import UsersService from '../services/users.js'
 import TokensService from '../services/tokens.js'
-import { API_URL } from '../config.js'
 import { v4 as uuid4 } from 'uuid'
 import ActivationMails from '../database/models/activationMails.js'
 
@@ -35,7 +34,7 @@ class AuthService {
     const passwordHash = await bcrypt.hash(password, 8)
     const activationCode = uuid4()
     const userId = uuid4()
-    const activationLink = `${API_URL}/api/users/activate/${activationCode}`
+    const activationLink = `${process.env.API_URL}/api/users/activate/${activationCode}`
 
     await ActivationMails.create({ userId, activationCode })
     await Auth.create({ passwordHash, email, userId, username })

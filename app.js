@@ -5,8 +5,10 @@ import fastifyFormBody from '@fastify/formbody'
 import fastifyCORS from '@fastify/cors'
 import ajvCompiler from '@fastify/ajv-compiler'
 import Fastify from 'fastify'
-import { API_PORT } from './config.js'
 import fastifyCookie from '@fastify/cookie'
+import { config } from 'dotenv'
+
+config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -41,7 +43,7 @@ app.register(fastifyCORS)
 app.register(fastifyFormBody)
 
 try {
-  await app.listen(API_PORT)
+  await app.listen(process.env.API_PORT)
 } catch(e) {
   console.log(e)
   process.exit()

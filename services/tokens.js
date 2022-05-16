@@ -1,17 +1,16 @@
 import jwt from 'jsonwebtoken'
-import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../config.js'
 import Token from '../database/models/tokens.js'
 
 class TokensService {
   generateTokens(payload) {
-    const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: '1h' })
-    const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '30d' })
+    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: '1h' })
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' })
     return { accessToken, refreshToken }
   }
 
   validateRefreshToken(refreshToken) {
     try {
-      return jwt.verify(refreshToken, JWT_REFRESH_SECRET)
+      return jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
     } catch(e) {
       return null
     }
@@ -19,7 +18,7 @@ class TokensService {
 
   validateAccessToken(accessToken) {
     try {
-      return jwt.verify(accessToken, JWT_ACCESS_SECRET)
+      return jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET)
     } catch(e) {
       return null
     }
