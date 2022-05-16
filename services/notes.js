@@ -13,11 +13,11 @@ class NotesService {
     const notesToAdd = newNotes.map((note) => ({
       ...note, author: userId
     }))
-    await Note.insertMany(notesToAdd)
+    return await Note.insertMany(notesToAdd)
   }
 
   async removeManyNotes(userId, notesIds) {
-    await Note.deleteMany({ noteId: notesIds, author: userId })
+    return await Note.deleteMany({ noteId: notesIds, author: userId })
   }
 
   async updateManyNotes(userId, updatedNotes) {
