@@ -1,4 +1,6 @@
 import Page from '../database/models/pages.js'
+import ForbiddenError from '../exceptions/forbiddenError.js'
+import NotFoundError from '../exceptions/notFoundError.js'
 
 class PagesController {
   async getUserPages(req, rep) {
@@ -11,8 +13,8 @@ class PagesController {
 
   async deletePage(req, rep) {
     const foundPage = await Page.findOne({ _id: req.params.pageId })
-    if(!foundPage) throw new Error('Unknown page')
-    if(foundPage.author !== req.currentUser.userId) throw new Error('You don\'t have permission')
+    if(!foundPage) throw new NotFoundError('Page not found')
+    if(foundPage.author !== req.currentUser.userId) throw new ForbiddenError()
 
     await Page.deleteOne({ _id: req.params.pageId })
     return { success: true }
@@ -20,8 +22,8 @@ class PagesController {
 
   async updatePage(req, rep) {
     const foundPage = await Page.findOne({ _id: req.params.pageId })
-    if(!foundPage) throw new Error('Unknown page')
-    if(foundPage.author !== req.currentUser.userId) throw new Error('You don\'t have permission')
+    if(!foundPage) throw new NotFoundError('Page not found')
+    if(foundPage.author !== req.currentUser.userId) throw new ForbiddenError()
 
     return await Page.updateOne({ _id: req.params.pageId }, req.body.page)
   }

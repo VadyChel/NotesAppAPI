@@ -5,14 +5,16 @@ import UsersService from '../services/users.js'
 import TokensService from '../services/tokens.js'
 import { v4 as uuid4 } from 'uuid'
 import ActivationMails from '../database/models/activationMails.js'
+import UnauthorizedError from '../exceptions/unauthorizedError.js'
+import BadRequestError from '../exceptions/badRequestError.js'
 
 class AuthService {
   async refresh(refreshToken) {
-    if(!refreshToken) throw new Error('You not specify refresh token')
+    if(!refreshToken) throw new UnauthorizedError()
 
     const userData = TokensService.validateRefreshToken(refreshToken)
     const foundToken = TokensService.findToken(refreshToken)
-    if(!userData || !foundToken) throw new Error('Unathourized')
+    if(!userData || !foundToken) throw new UnauthorizedError()
 
     const user = await UsersService.getUser(userData.userId)
     const tokens = TokensService.generateTokens({ userId: userData.userId, email: user.email, username: user.username })
@@ -22,14 +24,14 @@ class AuthService {
   }
 
   async revoke(refreshToken) {
-    if(!refreshToken) throw new Error('Unauthorized')
+    if(!refreshToken) throw new UnauthorizedError()
 
     return await TokensService.removeToken(refreshToken)
   }
 
   async register(password, email, username) {
     const foundAuth = await Auth.findOne({ email })
-    if(foundAuth) throw new Error('This email alread in use')
+    if(foundAuth) throw new BadRequestError('This email is already using')
 
     const passwordHash = await bcrypt.hash(password, 8)
     const activationCode = uuid4()
@@ -50,10 +52,10 @@ class AuthService {
 
   async login(password, email) {
     const foundAuth = await Auth.findOne({ email })
-    if(!foundAuth) throw new Error('This user is not registered')
+    if(!foundAuth) throw new BadRequestError('User is not registered')
 
     const isPasswordCorrect = await bcrypt.compare(password, foundAuth.passwordHash)
-    if(!isPasswordCorrect) throw new Error('Invalid password')
+    if(!isPasswordCorrect) throw new BadRequestError('Invalid password')
 
     const foundUser = await UsersService.getUser(foundAuth.userId)
     const tokens = TokensService.generateTokens({ userId: foundAuth.userId, email, username: foundUser.username })

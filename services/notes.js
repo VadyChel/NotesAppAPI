@@ -1,10 +1,11 @@
 import Note from '../database/models/notes.js'
 import Page from '../database/models/pages.js'
+import ForbiddenError from '../exceptions/forbiddenError.js'
 
 class NotesService {
   async getUserNotesByPage(userId, pageId) {
     const foundPage = await Page.findOne({ _id: pageId })
-    if(foundPage.author !== userId) throw new Error('You don\'t have permission')
+    if(foundPage.author !== userId) throw new ForbiddenError()
 
     return await Note.find({ author: userId, pageId })
   }
