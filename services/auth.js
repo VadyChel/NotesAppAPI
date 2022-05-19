@@ -17,10 +17,10 @@ class AuthService {
     if(!userData || !foundToken) throw new UnauthorizedError()
 
     const user = await UsersService.getUser(userData.userId)
-    const tokens = TokensService.generateTokens({ userId: userData.userId, email: user.email, username: user.username })
+    const tokens = TokensService.generateTokens({ userId: userData.userId, email: user.email })
 
     await TokensService.saveToken(userData.userId, tokens.refreshToken)
-    return { ...tokens, user }
+    return { tokens, user }
   }
 
   async revoke(refreshToken) {
@@ -42,12 +42,12 @@ class AuthService {
     await Auth.create({ passwordHash, email, userId, username })
 
     const newUser = await UsersService.createUser(userId, email, username)
-    const tokens = TokensService.generateTokens({ userId, email, username })
+    const tokens = TokensService.generateTokens({ userId, email })
     await TokensService.saveToken(userId, tokens.refreshToken)
 
     await MailService.sendActivationMail(email, activationLink, username)
 
-    return { ...tokens, currentUser: newUser }
+    return { tokens, user: newUser }
   }
 
   async login(password, email) {
@@ -57,11 +57,10 @@ class AuthService {
     const isPasswordCorrect = await bcrypt.compare(password, foundAuth.passwordHash)
     if(!isPasswordCorrect) throw new BadRequestError('Invalid password')
 
-    const foundUser = await UsersService.getUser(foundAuth.userId)
-    const tokens = TokensService.generateTokens({ userId: foundAuth.userId, email, username: foundUser.username })
+    const tokens = TokensService.generateTokens({ userId: foundAuth.userId, email })
     await TokensService.saveToken(foundAuth.userId, tokens.refreshToken)
 
-    return { ...tokens, currentUser: await UsersService.getUser(foundAuth.userId) }
+    return { tokens, user: await UsersService.getUser(foundAuth.userId) }
 
   }
 }
