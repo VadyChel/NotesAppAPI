@@ -39,7 +39,7 @@ app.register(AutoLoad, {
   dir: path.join(__dirname, 'routes')
 })
 app.register(fastifyCookie)
-app.register(fastifyCORS)
+app.register(fastifyCORS, { credentials: true, origin: process.env.CLIENT_URL })
 app.register(fastifyFormBody)
 
 try {
