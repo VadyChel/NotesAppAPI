@@ -4,7 +4,7 @@ import NotFoundError from '../exceptions/notFoundError.js'
 
 class UsersService {
   async getUser(userId) {
-    return await User.find({ userId })
+    return await User.findOne({ userId })
   }
 
   async editUser(userId, updatedUser) {
