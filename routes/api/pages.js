@@ -11,6 +11,6 @@ export default async (fastify, opts) => {
     schema: PagesDeleteRouteSchema, preHandler: checkAuthorizationHeaders
   }, PagesController.deletePage)
   fastify.put('/pages/:pageId', {
-    schema: PagesRouteSchema, preHandler: checkAuthorizationHeaders
+    preHandler: checkAuthorizationHeaders
   }, PagesController.updatePage)
 }
