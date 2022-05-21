@@ -7,7 +7,7 @@ class NotesService {
     const foundPage = await Page.findOne({ _id: pageId })
     if(foundPage.author !== userId) throw new ForbiddenError()
 
-    return await Note.find({ author: userId, pageId })
+    return await Note.find({ author: userId, page: pageId })
   }
 
   async insertNewNotes(userId, newNotes) {
