@@ -51,7 +51,7 @@ class PagesService {
   }
 
   async getUserPages(userId) {
-    return await Page.find({ author: userId })
+    return await Page.find({ author: userId, deleted: false })
   }
 
   async getPage(pageId) {
