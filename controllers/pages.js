@@ -6,7 +6,25 @@ class PagesController {
   }
 
   async createPage(req, rep) {
-    return await PagesService.createPage({ name: req.body.name, author: req.currentUser.userId })
+    return await PagesService.createPage({
+      name: req.body.name, author: req.currentUser.userId
+    })
+  }
+
+  async getTrash(req, rep) {
+    return await PagesService.getTrash(req.currentUser.userId)
+  }
+
+  async deleteAllFromTrash(req, rep) {
+    return await PagesService.deleteAllFromTrash(req.currentUser.userId)
+  }
+
+  async restorePageFromTrash(req, rep) {
+    return await PagesService.restorePageFromTrash(req.params.pageId, req.currentUser.userId)
+  }
+
+  async movePageToTrash(req, rep) {
+    return await PagesService.moveToTrash(req.params.pageId, req.currentUser.userId)
   }
 
   async deletePage(req, rep) {
@@ -14,7 +32,7 @@ class PagesController {
   }
 
   async updatePage(req, rep) {
-    return await PagesService.updatePage(req.params.pageId, req.body.newPage, req.currentUser.userId)
+    return await PagesService.updatePage(req.params.pageId, req.currentUser.userId, req.body.newPage)
   }
 }
 

@@ -10,6 +10,18 @@ export default async (fastify, opts) => {
   fastify.delete('/pages/:pageId', {
     schema: PagesDeleteRouteSchema, preHandler: checkAuthorizationHeaders
   }, PagesController.deletePage)
+  fastify.post('/pages/trash/:pageId', {
+    schema: PagesDeleteRouteSchema, preHandler: checkAuthorizationHeaders
+  }, PagesController.movePageToTrash)
+  fastify.post('/pages/trash/:pageId/restore', {
+    schema: PagesDeleteRouteSchema, preHandler: checkAuthorizationHeaders
+  }, PagesController.restorePageFromTrash)
+  fastify.get('/pages/trash', {
+    preHandler: checkAuthorizationHeaders
+  }, PagesController.getTrash)
+  fastify.delete('/pages/trash', {
+    preHandler: checkAuthorizationHeaders
+  }, PagesController.deleteAllFromTrash)
   fastify.put('/pages/:pageId', {
     preHandler: checkAuthorizationHeaders
   }, PagesController.updatePage)
