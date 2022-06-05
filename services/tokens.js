@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Token from '../database/models/tokens.js'
+import TokenDTO from '../dto/token.js'
 
 class TokensService {
   generateTokens(payload) {
@@ -31,7 +32,7 @@ class TokensService {
       return await foundToken.save()
     }
 
-    return await Token.create({ userId, refreshToken })
+    return new TokenDTO(await Token.create({ userId, refreshToken }))
   }
 
   async removeToken(refreshToken) {
@@ -39,7 +40,7 @@ class TokensService {
   }
 
   async findToken(refreshToken) {
-    return await Token.findOne({ refreshToken })
+    return new TokenDTO(await Token.findOne({ refreshToken }))
   }
 }
 

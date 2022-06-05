@@ -1,13 +1,15 @@
 import Note from '../database/models/notes.js'
 import Page from '../database/models/pages.js'
 import ForbiddenError from '../exceptions/forbiddenError.js'
+import { convertToDTOs } from '../helpers/other.js'
+import NoteDTO from '../dto/note.js'
 
 class NotesService {
   async getUserNotesByPage(userId, pageId) {
     const foundPage = await Page.findOne({ _id: pageId })
     if(foundPage.author !== userId) throw new ForbiddenError()
 
-    return await Note.find({ author: userId, page: pageId })
+    return convertToDTOs(await Note.find({ author: userId, page: pageId }), NoteDTO)
   }
 
   async insertNewNotes(userId, newNotes) {

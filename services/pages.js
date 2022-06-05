@@ -2,6 +2,8 @@ import Page from '../database/models/pages.js'
 import NotFoundError from '../exceptions/notFoundError.js'
 import BadRequestError from '../exceptions/badRequestError.js'
 import ForbiddenError from '../exceptions/forbiddenError.js'
+import { convertToDTOs } from '../helpers/other.js'
+import PageDTO from '../dto/page.js'
 
 class PagesService {
   async updatePage(pageId, userId, newPage, foundPage = null) {
@@ -22,7 +24,7 @@ class PagesService {
   }
 
   async getTrash(userId) {
-    return await Page.find({ author: userId, deleted: true })
+    return convertToDTOs(await Page.find({ author: userId, deleted: true }), PageDTO)
   }
 
   async deleteAllFromTrash(userId) {
@@ -38,7 +40,7 @@ class PagesService {
   }
 
   async createPage(page) {
-    return await Page.create(page)
+    return new PageDTO(await Page.create(page))
   }
 
   async deletePage(pageId, userId) {
@@ -51,7 +53,7 @@ class PagesService {
   }
 
   async getUserPages(userId) {
-    return await Page.find({ author: userId, deleted: false })
+    return convertToDTOs(await Page.find({ author: userId, deleted: false }), PageDTO)
   }
 
   async getPage(pageId) {
@@ -63,7 +65,7 @@ class PagesService {
     }
 
     if(!foundPage) throw new NotFoundError('Page not found')
-    return foundPage
+    return new PageDTO(foundPage)
   }
 }
 
