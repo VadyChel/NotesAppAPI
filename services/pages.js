@@ -7,6 +7,7 @@ import PageDTO from '../dto/page.js'
 
 class PagesService {
   async updatePage(pageId, userId, newPage, foundPage = null) {
+    if(!newPage) throw BadRequestError('You don\'t specify `newPage` field')
     if(!foundPage) {
       foundPage = await this.getPage(pageId)
     }
