@@ -40,7 +40,10 @@ class TokensService {
   }
 
   async findToken(refreshToken) {
-    return new TokenDTO(await Token.findOne({ refreshToken }))
+    const foundToken = await Token.findOne({ refreshToken })
+    if(!foundToken) return null
+
+    return new TokenDTO(foundToken)
   }
 }
 
