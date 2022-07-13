@@ -12,6 +12,10 @@ class UsersController {
       rep.redirect(process.env.CLIENT_URL)
     }
   }
+
+  async sendActivationMailAgain(req, rep) {
+    return await UsersService.sendActivationMailAgain(req.currentUser.userId)
+  }
 }
 
 export default new UsersController()
